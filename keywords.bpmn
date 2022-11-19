@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1vwtt5x" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.4.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0">
+  <bpmn:process id="Process_0ep33wn" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:userTaskForm id="userTaskForm_1jddklg">{
+  "components": [
+    {
+      "label": "Keywords",
+      "type": "select",
+      "id": "Field_11wi8dq",
+      "key": "keyword",
+      "valuesKey": "keywords",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_1ah3qwf",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.1.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.4.1"
+  },
+  "schemaVersion": 5
+}</zeebe:userTaskForm>
+      <zeebe:userTaskForm id="userTaskForm_3ps494l">{
+  "components": [
+    {
+      "label": "Supervisors",
+      "type": "select",
+      "id": "Field_17vzr6j",
+      "key": "supervisor",
+      "valuesKey": "supervisors",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_17b6rzv",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.1.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.4.1"
+  },
+  "schemaVersion": 5
+}</zeebe:userTaskForm>
+      <zeebe:userTaskForm id="userTaskForm_0h35j41">{
+  "components": [
+    {
+      "text": "Example for Markdown:\n\n# This is a heading\n\nThis shows an image:\n![alternative image text](https://someurl.com/image.png)\n\n## This is a sub-heading\n\nText can be shown for example using\n**bold**, or *italic* font.\n\n* This is an unordered list...\n* ...with two list items\n\n1. This is an ordered list...\n2. ...with two list items",
+      "type": "text",
+      "id": "Field_0ijb93e"
+    }
+  ],
+  "type": "default",
+  "id": "Form_0vkepoq",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.1.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.4.1"
+  },
+  "schemaVersion": 5
+}</zeebe:userTaskForm>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_037igtk</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_037igtk" sourceRef="StartEvent_1" targetRef="Activity_1dwfhxe" />
+    <bpmn:sequenceFlow id="Flow_1h8q82p" sourceRef="Activity_1dwfhxe" targetRef="Activity_1ex6nnk" />
+    <bpmn:serviceTask id="Activity_1dwfhxe" name="Load Keywords">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="load-keywords" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_037igtk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h8q82p</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_1ex6nnk" name="Select Keyword">
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="demo" />
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_1jddklg" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1h8q82p</bpmn:incoming>
+      <bpmn:outgoing>Flow_122ku3m</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_122ku3m" sourceRef="Activity_1ex6nnk" targetRef="Activity_0oxqawz" />
+    <bpmn:sequenceFlow id="Flow_1sb9ytq" sourceRef="Activity_0oxqawz" targetRef="Activity_1173z54" />
+    <bpmn:sequenceFlow id="Flow_044i96n" sourceRef="Activity_1173z54" targetRef="Activity_0854hpr" />
+    <bpmn:endEvent id="Event_09fhwy2">
+      <bpmn:incoming>Flow_1k4hyvr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1k4hyvr" sourceRef="Activity_0854hpr" targetRef="Event_09fhwy2" />
+    <bpmn:serviceTask id="Activity_0oxqawz" name="Load Supervisors">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="load-supervisors" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_122ku3m</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sb9ytq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_1173z54" name="Select Supervisors">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_3ps494l" />
+        <zeebe:assignmentDefinition assignee="demo" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1sb9ytq</bpmn:incoming>
+      <bpmn:outgoing>Flow_044i96n</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0854hpr" name="Supervisors">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0h35j41" />
+        <zeebe:assignmentDefinition assignee="=supervisor" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_044i96n</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k4hyvr</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0ep33wn">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12elis7_di" bpmnElement="Activity_1dwfhxe">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16gd6li_di" bpmnElement="Activity_1ex6nnk">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09fhwy2_di" bpmnElement="Event_09fhwy2">
+        <dc:Bounds x="1072" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0snprjz_di" bpmnElement="Activity_0oxqawz">
+        <dc:Bounds x="590" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gb0qbc_di" bpmnElement="Activity_1173z54">
+        <dc:Bounds x="750" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eg4ak7_di" bpmnElement="Activity_0854hpr">
+        <dc:Bounds x="910" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_037igtk_di" bpmnElement="Flow_037igtk">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h8q82p_di" bpmnElement="Flow_1h8q82p">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_122ku3m_di" bpmnElement="Flow_122ku3m">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="590" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sb9ytq_di" bpmnElement="Flow_1sb9ytq">
+        <di:waypoint x="690" y="117" />
+        <di:waypoint x="750" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_044i96n_di" bpmnElement="Flow_044i96n">
+        <di:waypoint x="850" y="117" />
+        <di:waypoint x="910" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k4hyvr_di" bpmnElement="Flow_1k4hyvr">
+        <di:waypoint x="1010" y="117" />
+        <di:waypoint x="1072" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
