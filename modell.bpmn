@@ -11,8 +11,8 @@
       "label": "Professor",
       "type": "select",
       "id": "Field_17vzr6j",
-      "key": "professoren",
-      "valuesKey": "professor",
+      "key": "professorSelected",
+      "valuesKey": "professorsWithKeywordsList",
       "validate": {
         "required": true
       }
@@ -31,47 +31,23 @@
       <zeebe:userTaskForm id="userTaskForm_3kibn5r">{
   "components": [
     {
-      "label": "Stichpunkte",
-      "type": "checklist",
-      "id": "Field_0wz4668",
-      "key": "stichpunkt",
-      "valuesKey": "stichpunkte"
-    },
-    {
       "label": "Titel",
       "type": "textfield",
       "id": "Field_049g89t",
-      "key": "field_0eryv5x"
+      "key": "applicationTitle"
     },
     {
       "label": "Typ",
       "type": "textfield",
       "id": "Field_0ht97e0",
-      "key": "field_1k0wmck"
+      "key": "applicationType"
     },
     {
-      "label": "Genehmigt Prof",
-      "type": "checkbox",
-      "id": "Field_0dw424m",
-      "key": "field_004pgo8"
-    },
-    {
-      "label": "Genehmigt PAV",
-      "type": "checkbox",
-      "id": "Field_1wmztgx",
-      "key": "field_0ypf2j3"
-    },
-    {
-      "label": "Genehmigt SSB",
-      "type": "checkbox",
-      "id": "Field_02ao386",
-      "key": "field_1vcadla"
-    },
-    {
-      "label": "Begründung Ablehnung",
-      "type": "textfield",
-      "id": "Field_06dycwn",
-      "key": "field_0kn6yh1"
+      "label": "Stichpunkte",
+      "type": "checklist",
+      "id": "Field_0wz4668",
+      "key": "keywordsSelected",
+      "valuesKey": "keywordsList"
     }
   ],
   "type": "default",
@@ -195,40 +171,134 @@
         <bpmn:flowNodeRef>Gateway_0l9ayqk</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>Flow_0egfivy</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:serviceTask id="Activity_1f6shkr" name="Suche passende Betreuer">
+    <bpmn:sequenceFlow id="Flow_0rapvst" sourceRef="Activity_1ri70px" targetRef="Event_1i3gbym" />
+    <bpmn:sequenceFlow id="Flow_06733al" sourceRef="Activity_1ygogmv" targetRef="Event_13f4u48" />
+    <bpmn:sequenceFlow id="Flow_1lcmo72" sourceRef="Activity_1coowbr" targetRef="Activity_1ri70px" />
+    <bpmn:sequenceFlow id="Flow_0jjibtc" sourceRef="Activity_0dddm1q" targetRef="Activity_1coowbr" />
+    <bpmn:sequenceFlow id="Flow_09mldsp" sourceRef="Gateway_1lx1k40" targetRef="Activity_1ygogmv" />
+    <bpmn:sequenceFlow id="Flow_02f641s" name="nein" sourceRef="Gateway_0l9ayqk" targetRef="Gateway_1lx1k40">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_02vw2au" name="ja" sourceRef="Gateway_0l9ayqk" targetRef="Activity_0dddm1q" />
+    <bpmn:sequenceFlow id="Flow_1go13ju" sourceRef="Activity_0nhv5ao" targetRef="Gateway_0l9ayqk" />
+    <bpmn:sequenceFlow id="Flow_11ihzs2" sourceRef="Activity_0xyiw9p" targetRef="Activity_0nhv5ao" />
+    <bpmn:sequenceFlow id="Flow_0jlwwdy" name="nein" sourceRef="Gateway_0q341lr" targetRef="Gateway_1lx1k40">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1s67xs5" name="ja" sourceRef="Gateway_0q341lr" targetRef="Activity_0xyiw9p" />
+    <bpmn:sequenceFlow id="Flow_03nx8mt" sourceRef="Activity_0zz6mbs" targetRef="Gateway_0q341lr" />
+    <bpmn:sequenceFlow id="Flow_00j53eu" sourceRef="Activity_07l78pf" targetRef="Activity_0zz6mbs" />
+    <bpmn:sequenceFlow id="Flow_0m0uf2u" name="abgelehnt" sourceRef="Gateway_1x3eqm6" targetRef="Gateway_1lx1k40">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_081vw00" name="angenommen" sourceRef="Gateway_1x3eqm6" targetRef="Activity_07l78pf" />
+    <bpmn:sequenceFlow id="Flow_0fur0fc" sourceRef="Activity_036f6u0" targetRef="Gateway_1x3eqm6" />
+    <bpmn:sequenceFlow id="Flow_0us4bnp" sourceRef="Activity_1ngqsjq" targetRef="Activity_10sc3z8" />
+    <bpmn:sequenceFlow id="Flow_1hjqtow" sourceRef="Activity_1v46goz" targetRef="Activity_036f6u0" />
+    <bpmn:sequenceFlow id="Flow_1jt1ips" sourceRef="Activity_00bj4r2" targetRef="Activity_1v46goz" />
+    <bpmn:sequenceFlow id="Flow_0qafpyu" sourceRef="Activity_1an2s7w" targetRef="Activity_00bj4r2" />
+    <bpmn:sequenceFlow id="Flow_1v1oyc8" sourceRef="Activity_1f6shkr" targetRef="Activity_1an2s7w" />
+    <bpmn:sequenceFlow id="Flow_0owlmik" sourceRef="Activity_10sc3z8" targetRef="Activity_1f6shkr" />
+    <bpmn:sequenceFlow id="Flow_0egfivy" sourceRef="StartEvent_1" targetRef="Activity_1ngqsjq" />
+    <bpmn:sendTask id="Activity_1ri70px" name="Beteiligte über Annahme informieren">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="lade-professor" />
+        <zeebe:taskDefinition type="hello-world" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0owlmik</bpmn:incoming>
-      <bpmn:outgoing>Flow_1v1oyc8</bpmn:outgoing>
+      <bpmn:incoming>Flow_1lcmo72</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rapvst</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Activity_1ygogmv" name="Beteiligte über Ablehnung informieren">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="hello-world" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09mldsp</bpmn:incoming>
+      <bpmn:outgoing>Flow_06733al</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="Activity_036f6u0" name="Ergebnis von Prüfer in DB schreiben">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="hello-world" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1hjqtow</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fur0fc</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_1an2s7w" name="Wähle Betreuer">
+    <bpmn:endEvent id="Event_1i3gbym">
+      <bpmn:incoming>Flow_0rapvst</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_13f4u48">
+      <bpmn:incoming>Flow_06733al</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_1coowbr" name="Arbeit anlegen">
+      <bpmn:documentation>Enddatum anhand Startdatum berechnen</bpmn:documentation>
       <bpmn:extensionElements>
-        <zeebe:properties>
-          <zeebe:property />
-        </zeebe:properties>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_0iqh6nb" />
+        <zeebe:taskDefinition type="hello-world" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1v1oyc8</bpmn:incoming>
-      <bpmn:outgoing>Flow_0qafpyu</bpmn:outgoing>
+      <bpmn:incoming>Flow_0jjibtc</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lcmo72</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_0dddm1q" name="Arbeit formal anlegen">
+      <bpmn:documentation>(Akten anlegen - vorhandenes ausdrucken?)
+Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0ki9eh2" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02vw2au</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jjibtc</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1v46goz" name="Anfrage bearbeiten">
-      <bpmn:documentation>Hier noch Grund Ablehnung + Alternativen abfragen</bpmn:documentation>
+    <bpmn:exclusiveGateway id="Gateway_1lx1k40">
+      <bpmn:incoming>Flow_0m0uf2u</bpmn:incoming>
+      <bpmn:incoming>Flow_0jlwwdy</bpmn:incoming>
+      <bpmn:incoming>Flow_02f641s</bpmn:incoming>
+      <bpmn:outgoing>Flow_09mldsp</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0l9ayqk" name="Vorleistung erbracht" default="Flow_02vw2au">
+      <bpmn:incoming>Flow_1go13ju</bpmn:incoming>
+      <bpmn:outgoing>Flow_02vw2au</bpmn:outgoing>
+      <bpmn:outgoing>Flow_02f641s</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Activity_0nhv5ao" name="Ergebnis von SSB in DB schreiben">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2i0mtb0" />
+        <zeebe:taskDefinition type="hello-world" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1jt1ips</bpmn:incoming>
-      <bpmn:outgoing>Flow_1hjqtow</bpmn:outgoing>
+      <bpmn:incoming>Flow_11ihzs2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1go13ju</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_0xyiw9p" name="Prüfung der Vorleistungen">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2suhp5p" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1s67xs5</bpmn:incoming>
+      <bpmn:outgoing>Flow_11ihzs2</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_1ngqsjq" name="Lade Stichpunkte">
+    <bpmn:serviceTask id="Activity_0zz6mbs" name="Ergebnis von PAV in DB schreiben">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="lade-stichpunkte" />
+        <zeebe:taskDefinition type="hello-world" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0egfivy</bpmn:incoming>
-      <bpmn:outgoing>Flow_0us4bnp</bpmn:outgoing>
+      <bpmn:incoming>Flow_00j53eu</bpmn:incoming>
+      <bpmn:outgoing>Flow_03nx8mt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0q341lr" name="Erstprüfung bestanden" default="Flow_1s67xs5">
+      <bpmn:incoming>Flow_03nx8mt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s67xs5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0jlwwdy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Activity_07l78pf" name="Erstprüfung des Antrags">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_02nhqk4" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_081vw00</bpmn:incoming>
+      <bpmn:outgoing>Flow_00j53eu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1x3eqm6" name="Entscheidung über Anfrage" default="Flow_081vw00">
+      <bpmn:incoming>Flow_0fur0fc</bpmn:incoming>
+      <bpmn:outgoing>Flow_081vw00</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0m0uf2u</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Activity_00bj4r2" name="Eintrag in DB anlegen">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="eintrag-anlegen" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0qafpyu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jt1ips</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="Activity_10sc3z8" name="Antrag ausfüllen">
       <bpmn:extensionElements>
@@ -240,143 +310,49 @@
       <bpmn:incoming>Flow_0us4bnp</bpmn:incoming>
       <bpmn:outgoing>Flow_0owlmik</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_00bj4r2" name="Eintrag in DB anlegen">
+    <bpmn:serviceTask id="Activity_1ngqsjq" name="Lade Stichpunkte">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="lade-stichpunkte" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0qafpyu</bpmn:incoming>
-      <bpmn:outgoing>Flow_1jt1ips</bpmn:outgoing>
+      <bpmn:incoming>Flow_0egfivy</bpmn:incoming>
+      <bpmn:outgoing>Flow_0us4bnp</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="Gateway_1x3eqm6" name="Entscheidung über Anfrage" default="Flow_081vw00">
-      <bpmn:incoming>Flow_0fur0fc</bpmn:incoming>
-      <bpmn:outgoing>Flow_081vw00</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0m0uf2u</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Activity_07l78pf" name="Erstprüfung des Antrags">
+    <bpmn:userTask id="Activity_1v46goz" name="Anfrage bearbeiten">
+      <bpmn:documentation>Hier noch Grund Ablehnung + Alternativen abfragen</bpmn:documentation>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_02nhqk4" />
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2i0mtb0" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_081vw00</bpmn:incoming>
-      <bpmn:outgoing>Flow_00j53eu</bpmn:outgoing>
+      <bpmn:incoming>Flow_1jt1ips</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hjqtow</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_0q341lr" name="Erstprüfung bestanden" default="Flow_1s67xs5">
-      <bpmn:incoming>Flow_03nx8mt</bpmn:incoming>
-      <bpmn:outgoing>Flow_1s67xs5</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0jlwwdy</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Activity_0zz6mbs" name="Ergebnis von PAV in DB schreiben">
+    <bpmn:userTask id="Activity_1an2s7w" name="Wähle Betreuer">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:properties>
+          <zeebe:property />
+        </zeebe:properties>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_0iqh6nb" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_00j53eu</bpmn:incoming>
-      <bpmn:outgoing>Flow_03nx8mt</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_0xyiw9p" name="Prüfung der Vorleistungen">
-      <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2suhp5p" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1s67xs5</bpmn:incoming>
-      <bpmn:outgoing>Flow_11ihzs2</bpmn:outgoing>
+      <bpmn:incoming>Flow_1v1oyc8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qafpyu</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_0nhv5ao" name="Ergebnis von SSB in DB schreiben">
+    <bpmn:serviceTask id="Activity_1f6shkr" name="Suche passende Betreuer">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="lade-professor" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_11ihzs2</bpmn:incoming>
-      <bpmn:outgoing>Flow_1go13ju</bpmn:outgoing>
+      <bpmn:incoming>Flow_0owlmik</bpmn:incoming>
+      <bpmn:outgoing>Flow_1v1oyc8</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="Gateway_0l9ayqk" name="Vorleistung erbracht" default="Flow_02vw2au">
-      <bpmn:incoming>Flow_1go13ju</bpmn:incoming>
-      <bpmn:outgoing>Flow_02vw2au</bpmn:outgoing>
-      <bpmn:outgoing>Flow_02f641s</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="Gateway_1lx1k40">
-      <bpmn:incoming>Flow_0m0uf2u</bpmn:incoming>
-      <bpmn:incoming>Flow_0jlwwdy</bpmn:incoming>
-      <bpmn:incoming>Flow_02f641s</bpmn:incoming>
-      <bpmn:outgoing>Flow_09mldsp</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Activity_0dddm1q" name="Arbeit formal anlegen">
-      <bpmn:documentation>(Akten anlegen - vorhandenes ausdrucken?)
-Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
-      <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0ki9eh2" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_02vw2au</bpmn:incoming>
-      <bpmn:outgoing>Flow_0jjibtc</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_1coowbr" name="Arbeit anlegen">
-      <bpmn:documentation>Enddatum anhand Startdatum berechnen</bpmn:documentation>
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0jjibtc</bpmn:incoming>
-      <bpmn:outgoing>Flow_1lcmo72</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_13f4u48">
-      <bpmn:incoming>Flow_06733al</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:endEvent id="Event_1i3gbym">
-      <bpmn:incoming>Flow_0rapvst</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_036f6u0" name="Ergebnis von Prüfer in DB schreiben">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1hjqtow</bpmn:incoming>
-      <bpmn:outgoing>Flow_0fur0fc</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sendTask id="Activity_1ygogmv" name="Beteiligte über Ablehnung informieren">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_09mldsp</bpmn:incoming>
-      <bpmn:outgoing>Flow_06733al</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:sendTask id="Activity_1ri70px" name="Beteiligte über Annahme informieren">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1lcmo72</bpmn:incoming>
-      <bpmn:outgoing>Flow_0rapvst</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:sequenceFlow id="Flow_0egfivy" sourceRef="StartEvent_1" targetRef="Activity_1ngqsjq" />
-    <bpmn:sequenceFlow id="Flow_0owlmik" sourceRef="Activity_10sc3z8" targetRef="Activity_1f6shkr" />
-    <bpmn:sequenceFlow id="Flow_1v1oyc8" sourceRef="Activity_1f6shkr" targetRef="Activity_1an2s7w" />
-    <bpmn:sequenceFlow id="Flow_0qafpyu" sourceRef="Activity_1an2s7w" targetRef="Activity_00bj4r2" />
-    <bpmn:sequenceFlow id="Flow_1jt1ips" sourceRef="Activity_00bj4r2" targetRef="Activity_1v46goz" />
-    <bpmn:sequenceFlow id="Flow_1hjqtow" sourceRef="Activity_1v46goz" targetRef="Activity_036f6u0" />
-    <bpmn:sequenceFlow id="Flow_0us4bnp" sourceRef="Activity_1ngqsjq" targetRef="Activity_10sc3z8" />
-    <bpmn:sequenceFlow id="Flow_0fur0fc" sourceRef="Activity_036f6u0" targetRef="Gateway_1x3eqm6" />
-    <bpmn:sequenceFlow id="Flow_081vw00" name="angenommen" sourceRef="Gateway_1x3eqm6" targetRef="Activity_07l78pf" />
-    <bpmn:sequenceFlow id="Flow_0m0uf2u" name="abgelehnt" sourceRef="Gateway_1x3eqm6" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_00j53eu" sourceRef="Activity_07l78pf" targetRef="Activity_0zz6mbs" />
-    <bpmn:sequenceFlow id="Flow_03nx8mt" sourceRef="Activity_0zz6mbs" targetRef="Gateway_0q341lr" />
-    <bpmn:sequenceFlow id="Flow_1s67xs5" name="ja" sourceRef="Gateway_0q341lr" targetRef="Activity_0xyiw9p" />
-    <bpmn:sequenceFlow id="Flow_0jlwwdy" name="nein" sourceRef="Gateway_0q341lr" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_11ihzs2" sourceRef="Activity_0xyiw9p" targetRef="Activity_0nhv5ao" />
-    <bpmn:sequenceFlow id="Flow_1go13ju" sourceRef="Activity_0nhv5ao" targetRef="Gateway_0l9ayqk" />
-    <bpmn:sequenceFlow id="Flow_02vw2au" name="ja" sourceRef="Gateway_0l9ayqk" targetRef="Activity_0dddm1q" />
-    <bpmn:sequenceFlow id="Flow_02f641s" name="nein" sourceRef="Gateway_0l9ayqk" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_09mldsp" sourceRef="Gateway_1lx1k40" targetRef="Activity_1ygogmv" />
-    <bpmn:sequenceFlow id="Flow_0jjibtc" sourceRef="Activity_0dddm1q" targetRef="Activity_1coowbr" />
-    <bpmn:sequenceFlow id="Flow_1lcmo72" sourceRef="Activity_1coowbr" targetRef="Activity_1ri70px" />
-    <bpmn:sequenceFlow id="Flow_06733al" sourceRef="Activity_1ygogmv" targetRef="Event_13f4u48" />
-    <bpmn:sequenceFlow id="Flow_0rapvst" sourceRef="Activity_1ri70px" targetRef="Event_1i3gbym" />
-    <bpmn:textAnnotation id="TextAnnotation_0k4ppg6">
-      <bpmn:text>Student + Antrag</bpmn:text>
-    </bpmn:textAnnotation>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0egfivy</bpmn:outgoing>
+    </bpmn:startEvent>
     <bpmn:textAnnotation id="TextAnnotation_1y7u7s9">
       <bpmn:text>Enddatum berechnen</bpmn:text>
     </bpmn:textAnnotation>
-    <bpmn:association id="Association_1cwbdfk" sourceRef="Activity_00bj4r2" targetRef="TextAnnotation_0k4ppg6" />
+    <bpmn:textAnnotation id="TextAnnotation_0k4ppg6">
+      <bpmn:text>Student + Antrag</bpmn:text>
+    </bpmn:textAnnotation>
     <bpmn:association id="Association_1rc2ozl" sourceRef="Activity_1coowbr" targetRef="TextAnnotation_1y7u7s9" />
+    <bpmn:association id="Association_1cwbdfk" sourceRef="Activity_00bj4r2" targetRef="TextAnnotation_0k4ppg6" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1o9ffst">
@@ -384,32 +360,24 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
         <dc:Bounds x="159" y="60" width="2531" height="1100" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_04c050u_di" bpmnElement="Lane_04c050u" isHorizontal="true" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
-        <dc:Bounds x="189" y="60" width="2501" height="208" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_029mud7_di" bpmnElement="Lane_029mud7" isHorizontal="true">
-        <dc:Bounds x="189" y="268" width="2501" height="221" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_1d1crkl_di" bpmnElement="Lane_1d1crkl" isHorizontal="true">
-        <dc:Bounds x="189" y="489" width="2501" height="221" />
+      <bpmndi:BPMNShape id="Lane_0j2cyjm_di" bpmnElement="Lane_0j2cyjm" isHorizontal="true">
+        <dc:Bounds x="189" y="930" width="2501" height="230" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0v7mk8l_di" bpmnElement="Lane_0v7mk8l" isHorizontal="true">
         <dc:Bounds x="189" y="710" width="2501" height="220" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_0j2cyjm_di" bpmnElement="Lane_0j2cyjm" isHorizontal="true">
-        <dc:Bounds x="189" y="930" width="2501" height="230" />
+      <bpmndi:BPMNShape id="Lane_1d1crkl_di" bpmnElement="Lane_1d1crkl" isHorizontal="true">
+        <dc:Bounds x="189" y="489" width="2501" height="221" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0k4ppg6_di" bpmnElement="TextAnnotation_0k4ppg6">
-        <dc:Bounds x="1210" y="280" width="115" height="30" />
+      <bpmndi:BPMNShape id="Lane_029mud7_di" bpmnElement="Lane_029mud7" isHorizontal="true">
+        <dc:Bounds x="189" y="268" width="2501" height="221" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1y7u7s9_di" bpmnElement="TextAnnotation_1y7u7s9">
-        <dc:Bounds x="2380" y="730" width="100" height="39" />
+      <bpmndi:BPMNShape id="Lane_04c050u_di" bpmnElement="Lane_04c050u" isHorizontal="true" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
+        <dc:Bounds x="189" y="60" width="2501" height="208" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -499,14 +467,14 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
       <bpmndi:BPMNShape id="Activity_1uuu4by_di" bpmnElement="Activity_1ri70px" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
         <dc:Bounds x="2400" y="130" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_1cwbdfk_di" bpmnElement="Association_1cwbdfk">
-        <di:waypoint x="1160" y="352" />
-        <di:waypoint x="1234" y="310" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_1rc2ozl_di" bpmnElement="Association_1rc2ozl">
-        <di:waypoint x="2367" y="794" />
-        <di:waypoint x="2399" y="769" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0k4ppg6_di" bpmnElement="TextAnnotation_0k4ppg6">
+        <dc:Bounds x="1210" y="280" width="115" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1y7u7s9_di" bpmnElement="TextAnnotation_1y7u7s9">
+        <dc:Bounds x="2380" y="730" width="100" height="39" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0egfivy_di" bpmnElement="Flow_0egfivy">
         <di:waypoint x="288" y="380" />
         <di:waypoint x="360" y="380" />
@@ -552,7 +520,7 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
         <di:waypoint x="1990" y="100" />
         <di:waypoint x="1990" y="145" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1436" y="543" width="49" height="14" />
+          <dc:Bounds x="1436" y="543" width="50" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_00j53eu_di" bpmnElement="Flow_00j53eu">
@@ -621,6 +589,14 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
       <bpmndi:BPMNEdge id="Flow_0rapvst_di" bpmnElement="Flow_0rapvst">
         <di:waypoint x="2500" y="170" />
         <di:waypoint x="2552" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1cwbdfk_di" bpmnElement="Association_1cwbdfk">
+        <di:waypoint x="1160" y="352" />
+        <di:waypoint x="1234" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1rc2ozl_di" bpmnElement="Association_1rc2ozl">
+        <di:waypoint x="2367" y="794" />
+        <di:waypoint x="2399" y="769" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

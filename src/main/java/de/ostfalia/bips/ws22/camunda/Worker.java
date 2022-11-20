@@ -47,7 +47,7 @@ public class Worker {
 
         // Probably add some process variables
         final HashMap<String, Object> variables = new HashMap<>();
-        variables.put("stichpunkte", stichpunkte);
+        variables.put("keywordsList", stichpunkte);
         return variables;
     }
 
@@ -57,7 +57,7 @@ public class Worker {
         LOGGER.info("Lade Betreuer");
 
         /** Finde alle selektierten Stichpunkte */
-        Object providedKeywordArray = job.getVariablesAsMap().get("stichpunkt");
+        Object providedKeywordArray = job.getVariablesAsMap().get("keywordsSelected");
 
         String[] keywordString = providedKeywordArray.toString().substring(1, providedKeywordArray.toString().length() -1).split(", ");
         ArrayList<Integer> keywordIDs = new ArrayList<>();
@@ -80,8 +80,12 @@ public class Worker {
         });
 
         final HashMap<String, Object> variables = new HashMap<>();
-        variables.put("professor", professorsWithKeyword);
+        variables.put("professorsWithKeywordsList", professorsWithKeyword);
         return variables;
+    }
 
+    @ZeebeWorker(type = "eintrag-anlegen", autoComplete = true)
+    public void eintragAnlegen(final ActivatedJob job) {
+        LOGGER.info("Neunen Antrag anlegen");
     }
 }
