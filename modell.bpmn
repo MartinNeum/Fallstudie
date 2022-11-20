@@ -8,10 +8,15 @@
       <zeebe:userTaskForm id="UserTaskForm_0iqh6nb">{
   "components": [
     {
-      "label": "Professor",
+      "text": "### Betreuer für Thema der Abschlussarbeit",
+      "type": "text",
+      "id": "Field_1nji30z"
+    },
+    {
+      "label": "Betreuer",
       "type": "select",
       "id": "Field_17vzr6j",
-      "key": "professorSelected",
+      "key": "selectedProfessorIDAndKeywordID",
       "valuesKey": "professorsWithKeywordsList",
       "validate": {
         "required": true
@@ -24,30 +29,89 @@
   "executionPlatformVersion": "8.1.0",
   "exporter": {
     "name": "Camunda Modeler",
-    "version": "5.4.1"
+    "version": "5.5.0"
   },
   "schemaVersion": 5
 }</zeebe:userTaskForm>
       <zeebe:userTaskForm id="userTaskForm_3kibn5r">{
   "components": [
     {
+      "text": "### Angaben zum Student",
+      "type": "text",
+      "id": "Field_1ekviwl"
+    },
+    {
+      "label": "Matrikel-Nummer",
+      "type": "textfield",
+      "id": "Field_13x30a2",
+      "key": "studentID",
+      "validate": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "label": "Mailadresse",
+      "type": "textfield",
+      "id": "Field_1kbrg2v",
+      "key": "studentMail",
+      "validate": {
+        "required": true,
+        "minLength": 3
+      }
+    },
+    {
+      "label": "Vorname",
+      "type": "textfield",
+      "id": "Field_0pq1aos",
+      "key": "studentPrename",
+      "validate": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "label": "Nachname",
+      "type": "textfield",
+      "id": "Field_0q9azep",
+      "key": "studentName",
+      "validate": {
+        "required": true,
+        "minLength": 1
+      }
+    },
+    {
+      "text": "### Angaben zur Abschlussarbeit",
+      "type": "text",
+      "id": "Field_1wkjmjf"
+    },
+    {
       "label": "Titel",
       "type": "textfield",
       "id": "Field_049g89t",
-      "key": "applicationTitle"
+      "key": "applicationTitle",
+      "validate": {
+        "required": true
+      }
     },
     {
       "label": "Typ",
       "type": "textfield",
       "id": "Field_0ht97e0",
-      "key": "applicationType"
+      "key": "applicationType",
+      "validate": {
+        "required": true
+      }
     },
     {
       "label": "Stichpunkte",
       "type": "checklist",
       "id": "Field_0wz4668",
       "key": "keywordsSelected",
-      "valuesKey": "keywordsList"
+      "valuesKey": "keywordsList",
+      "validate": {
+        "required": true
+      }
     }
   ],
   "type": "default",
