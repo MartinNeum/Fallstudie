@@ -127,14 +127,14 @@
       <zeebe:userTaskForm id="userTaskForm_2i0mtb0">{
   "components": [
     {
-      "label": "Number",
-      "type": "number",
-      "id": "Field_0sw4ds1",
-      "key": "field_1txpp8z"
+      "label": "Antrag genehmigen",
+      "type": "checkbox",
+      "id": "Field_0kx2xa1",
+      "key": "applicationProfessorApproved"
     }
   ],
   "type": "default",
-  "id": "Form_1pluxub",
+  "id": "Form_0vmqze3",
   "executionPlatform": "Camunda Cloud",
   "executionPlatformVersion": "8.1.0",
   "exporter": {
@@ -280,7 +280,7 @@
     </bpmn:sendTask>
     <bpmn:serviceTask id="Activity_036f6u0" name="Ergebnis von Prüfer in DB schreiben">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="antrag-genehmigen-prof" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1hjqtow</bpmn:incoming>
       <bpmn:outgoing>Flow_0fur0fc</bpmn:outgoing>
@@ -353,6 +353,7 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
       <bpmn:outgoing>Flow_00j53eu</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_1x3eqm6" name="Entscheidung über Anfrage" default="Flow_081vw00">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0fur0fc</bpmn:incoming>
       <bpmn:outgoing>Flow_081vw00</bpmn:outgoing>
       <bpmn:outgoing>Flow_0m0uf2u</bpmn:outgoing>

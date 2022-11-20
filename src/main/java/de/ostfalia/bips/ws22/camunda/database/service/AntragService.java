@@ -17,11 +17,24 @@ public class AntragService {
         return repository;
     }
 
-    public void createAntrag(Integer studentID, Integer professorID, String titel, Integer typ) {
+    public int createAntrag(Integer studentID, Integer professorID, String titel, Integer typ) {
         if (studentID == null || professorID == null || titel == null || typ == null) {
             throw new InvalidParameterException("Create Antrag failed. At least one parameter is NULL.");
         }
 
-        repository.createAntrag(studentID, professorID, titel, typ);
+        return repository.createAntrag(studentID, professorID, titel, typ);
+    }
+
+    public void setAntragGenehmigungStatusProf(Boolean genehmigt, Integer studentID) {
+        if (genehmigt == null) {
+            throw new InvalidParameterException("Update Antrag Genehmigung failed. At least one parameter is NULL.");
+        }
+
+        if (genehmigt) {
+            repository.updateAntragGenehmigungProf(1, studentID);
+        } else {
+            repository.updateAntragGenehmigungProf(0, studentID);
+        }
+
     }
 }

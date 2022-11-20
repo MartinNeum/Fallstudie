@@ -117,7 +117,6 @@ public class Worker {
         String typString = job.getVariablesAsMap().get("applicationType").toString();
 
         Integer selectedProfID = Integer.parseInt(profAndKeywordString[0]);
-        Integer selectedKeywordID = Integer.parseInt(profAndKeywordString[1]);
         Integer typ = Integer.parseInt(typString);
 
         try {
@@ -126,5 +125,24 @@ public class Worker {
         } catch (Exception e) {
             LOGGER.info("--> Anlage des Antrags schlug fehl: " + e.getMessage());
         }
+    }
+
+    @ZeebeWorker(type = "antrag-genehmigen-prof", autoComplete = true)
+    public void antragGenehmigenProf(final ActivatedJob job) {
+
+        LOGGER.info("Setze Genehmigungsstatus vom Professor");
+
+        /** Antrag genehmigen oder ablehnen */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String approvedString = job.getVariablesAsMap().get("applicationProfessorApproved").toString();
+        Boolean approved = Boolean.parseBoolean(approvedString);
+
+        try {
+            antragService.setAntragGenehmigungStatusProf(approved, studentID);
+            LOGGER.info("--> Genehmigungsstatus wurde gesetzt: " + approved);
+        } catch (Exception e) {
+            LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
+        }
+
     }
 }
