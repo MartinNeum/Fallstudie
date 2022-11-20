@@ -14,6 +14,6 @@ public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
             "INNER JOIN ProfessorHatStichpunkt phs " +
             "ON phs.id.professor = p " +
             "WHERE phs.id.stichpunkt in(:stichpunkt) " +
-            "ORDER BY phs.gewicht DESC")
+            "ORDER BY phs.id.stichpunkt.id ASC ")
     List<Professor> findAllByStichpunkt (@Param("stichpunkt") Stichpunkt stichpunkt);
 }

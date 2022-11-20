@@ -73,4 +73,8 @@ public class Professor {
                 ", mailadresse='" + mailadresse + '\'' +
                 '}';
     }
+
+    public String getLabel() {
+        return titel + " " + vorname + " " + nachname;
+    }
 }

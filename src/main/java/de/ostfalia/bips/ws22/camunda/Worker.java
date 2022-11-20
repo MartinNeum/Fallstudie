@@ -1,5 +1,6 @@
 package de.ostfalia.bips.ws22.camunda;
 
+import de.ostfalia.bips.ws22.camunda.database.domain.Professor;
 import de.ostfalia.bips.ws22.camunda.database.domain.Stichpunkt;
 import de.ostfalia.bips.ws22.camunda.database.service.ProfessorService;
 import de.ostfalia.bips.ws22.camunda.database.service.StichpunktService;
@@ -12,10 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -54,28 +53,35 @@ public class Worker {
 
     @ZeebeWorker(type = "lade-professor", autoComplete = true)
     public Map<String, Object> professor(final ActivatedJob job) {
-        // Do the business logic
-        LOGGER.info("Lade Professor");
 
-        // Get the
-        final Object stichpunkt = job.getVariablesAsMap().get("stichpunkt");
-        final Optional<Stichpunkt> found;
-        if (stichpunkt instanceof Integer) {
-            found = stichpunktService.getRepository().findById(((Integer) stichpunkt));
-        } else if (stichpunkt != null && stichpunkt.toString().matches("\\d+")) {
-            found = stichpunktService.getRepository().findById(Integer.parseInt(stichpunkt.toString()));
-        } else {
-            found = Optional.empty();
+        LOGGER.info("Lade Betreuer");
+
+        /** Finde alle selektierten Stichpunkte */
+        Object providedKeywordArray = job.getVariablesAsMap().get("stichpunkt");
+
+        String[] keywordString = providedKeywordArray.toString().substring(1, providedKeywordArray.toString().length() -1).split(", ");
+        ArrayList<Integer> keywordIDs = new ArrayList<>();
+        for(int i = 0; i < keywordString.length; i++) {
+            keywordIDs.add(Integer.parseInt(keywordString[i]));
         }
-        final List<Option<String>> professor = found
-                .map(professorService::findAllByStichpunkt)
-                .orElse(professorService.getRepository().findAll()).stream()
-                .map(e -> new Option<>(e.getVorname(), e.getNachname()))
-                .collect(Collectors.toList());
 
-        // Probably add some process variables
+        ArrayList<Optional<Stichpunkt>> selectedKeywords = new ArrayList<>();
+        keywordIDs.forEach((id) -> {
+            selectedKeywords.add(stichpunktService.getRepository().findById(id));
+        });
+
+        /** Finde Professoren zu den selektierten Stichpunkten */
+        List<Option> professorsWithKeyword = new ArrayList<>();
+        selectedKeywords.forEach((keyword) -> {
+           List<Professor> profs = professorService.findAllByStichpunkt(keyword.get());
+           profs.forEach(prof -> {
+               professorsWithKeyword.add(new Option<>("[" + keyword.get().getTitel() + "] " + prof.getLabel(), prof));
+           });
+        });
+
         final HashMap<String, Object> variables = new HashMap<>();
-        variables.put("professor", professor);
+        variables.put("professor", professorsWithKeyword);
         return variables;
+
     }
 }
