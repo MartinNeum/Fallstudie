@@ -145,4 +145,42 @@ public class Worker {
         }
 
     }
+
+    @ZeebeWorker(type = "antrag-genehmigen-pav", autoComplete = true)
+    public void antragGenehmigenPAV(final ActivatedJob job) {
+
+        LOGGER.info("Setze Genehmigungsstatus vom Prüfungsausschuss");
+
+        /** Antrag genehmigen oder ablehnen */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String approvedString = job.getVariablesAsMap().get("applicationPavApproved").toString();
+        Boolean approved = Boolean.parseBoolean(approvedString);
+
+        try {
+            antragService.setAntragGenehmigungStatusPAV(approved, studentID);
+            LOGGER.info("--> Genehmigungsstatus wurde gesetzt: " + approved);
+        } catch (Exception e) {
+            LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
+        }
+
+    }
+
+    @ZeebeWorker(type = "antrag-genehmigen-ssb", autoComplete = true)
+    public void antragGenehmigenSSB(final ActivatedJob job) {
+
+        LOGGER.info("Setze Genehmigungsstatus vom Studenten-Servicebüro");
+
+        /** Antrag genehmigen oder ablehnen */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String approvedString = job.getVariablesAsMap().get("applicationSsbApproved").toString();
+        Boolean approved = Boolean.parseBoolean(approvedString);
+
+        try {
+            antragService.setAntragGenehmigungStatusSSB(approved, studentID);
+            LOGGER.info("--> Genehmigungsstatus wurde gesetzt: " + approved);
+        } catch (Exception e) {
+            LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
+        }
+
+    }
 }

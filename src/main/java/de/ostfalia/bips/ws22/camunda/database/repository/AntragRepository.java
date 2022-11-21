@@ -28,4 +28,21 @@ public interface AntragRepository extends JpaRepository<Antrag, Integer> {
         @Param("genehmigt") Integer genehmigt,
         @Param("studentID") Integer id
     );
+
+    @Modifying
+    @Query(value = "UPDATE Antrag  SET genehmigt_pav = :genehmigt WHERE id_studierender = :studentID", nativeQuery = true)
+    @Transactional
+    int updateAntragGenehmigungPAV (
+            @Param("genehmigt") Integer genehmigt,
+            @Param("studentID") Integer id
+    );
+
+    @Modifying
+    @Query(value = "UPDATE Antrag  SET genehmigt_ssb = :genehmigt WHERE id_studierender = :studentID", nativeQuery = true)
+    @Transactional
+    int updateAntragGenehmigungSSB (
+            @Param("genehmigt") Integer genehmigt,
+            @Param("studentID") Integer id
+    );
+
 }

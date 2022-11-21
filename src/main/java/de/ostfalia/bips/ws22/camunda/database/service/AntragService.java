@@ -27,7 +27,7 @@ public class AntragService {
 
     public void setAntragGenehmigungStatusProf(Boolean genehmigt, Integer studentID) {
         if (genehmigt == null) {
-            throw new InvalidParameterException("Update Antrag Genehmigung failed. At least one parameter is NULL.");
+            throw new InvalidParameterException("Update Antrag Genehmigung (Prof) failed. At least one parameter is NULL.");
         }
 
         if (genehmigt) {
@@ -35,6 +35,29 @@ public class AntragService {
         } else {
             repository.updateAntragGenehmigungProf(0, studentID);
         }
+    }
 
+    public void setAntragGenehmigungStatusPAV(Boolean genehmigt, Integer studentID) {
+        if (genehmigt == null) {
+            throw new InvalidParameterException("Update Antrag Genehmigung (PAV) failed. At least one parameter is NULL.");
+        }
+
+        if (genehmigt) {
+            repository.updateAntragGenehmigungPAV(1, studentID);
+        } else {
+            repository.updateAntragGenehmigungPAV(0, studentID);
+        }
+    }
+
+    public void setAntragGenehmigungStatusSSB(Boolean genehmigt, Integer studentID) {
+        if (genehmigt == null) {
+            throw new InvalidParameterException("Update Antrag Genehmigung (SSB) failed. At least one parameter is NULL.");
+        }
+
+        if (genehmigt) {
+            repository.updateAntragGenehmigungSSB(1, studentID);
+        } else {
+            repository.updateAntragGenehmigungSSB(0, studentID);
+        }
     }
 }
