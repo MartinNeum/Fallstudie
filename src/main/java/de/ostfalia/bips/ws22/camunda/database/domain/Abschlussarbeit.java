@@ -9,7 +9,7 @@ import java.util.Date;
 public class Abschlussarbeit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_keyword", nullable = false)
+    @Column(name = "id_abschlussarbeit", nullable = false)
     private Integer id;
 
     @Column(name = "ende_datum", nullable = false)

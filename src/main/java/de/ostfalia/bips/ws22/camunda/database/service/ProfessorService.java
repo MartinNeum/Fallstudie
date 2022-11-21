@@ -5,7 +5,6 @@ import de.ostfalia.bips.ws22.camunda.database.domain.Professor;
 import de.ostfalia.bips.ws22.camunda.database.domain.Stichpunkt;
 import de.ostfalia.bips.ws22.camunda.database.repository.ProfessorRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
 
