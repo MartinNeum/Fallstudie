@@ -139,13 +139,19 @@
     {
       "text": "### Überprüfung Antrag: Professor",
       "type": "text",
-      "id": "Field_0mv3qub"
+      "id": "Field_0mv3quc"
     },
     {
       "label": "Antrag genehmigen",
       "type": "checkbox",
       "id": "Field_0kx2xa1",
       "key": "applicationProfessorApproved"
+    },
+    {
+      "label": "Begründung der Absage",
+      "type": "textfield",
+      "id": "Field_08dixs3",
+      "key": "reasonDeny"
     }
   ],
   "type": "default",
@@ -163,13 +169,19 @@
     {
       "text": "### Überprüfung Antrag: Prüfungsausschuss",
       "type": "text",
-      "id": "Field_0mv3qub"
+      "id": "Field_0mv3quc"
     },
     {
       "label": "Antrag genehmigen",
       "type": "checkbox",
       "id": "Field_0kx2xa1",
       "key": "applicationPavApproved"
+    },
+    {
+      "label": "Begründung der Absage",
+      "type": "textfield",
+      "id": "Field_08dixs3",
+      "key": "reasonDeny"
     }
   ],
   "type": "default",
@@ -187,13 +199,19 @@
     {
       "text": "### Überprüfung Antrag: Studenten-Servicebüro",
       "type": "text",
-      "id": "Field_0mv3qub"
+      "id": "Field_0mv3quc"
     },
     {
       "label": "Antrag genehmigen",
       "type": "checkbox",
       "id": "Field_0kx2xa1",
       "key": "applicationSsbApproved"
+    },
+    {
+      "label": "Begründung der Absage",
+      "type": "textfield",
+      "id": "Field_08dixs3",
+      "key": "reasonDeny"
     }
   ],
   "type": "default",
@@ -209,14 +227,32 @@
       <zeebe:userTaskForm id="userTaskForm_0ki9eh2">{
   "components": [
     {
-      "label": "Number",
+      "text": "### Abschlussarbeit anlegen",
+      "type": "text",
+      "id": "Field_1nb8jpm"
+    },
+    {
+      "label": "Abschlussarbeit ID",
       "type": "number",
-      "id": "Field_0sw4ds1",
-      "key": "field_1txpp8z"
+      "id": "Field_0yol46t",
+      "key": "thesisID",
+      "validate": {
+        "required": true,
+        "min": 1
+      }
+    },
+    {
+      "label": "Datum Beginn (YYYY-MM-DD)",
+      "type": "textfield",
+      "id": "Field_1j7j6z5",
+      "key": "thesisStartDate",
+      "validate": {
+        "required": true
+      }
     }
   ],
   "type": "default",
-  "id": "Form_1pluxub",
+  "id": "Form_0vmqze3",
   "executionPlatform": "Camunda Cloud",
   "executionPlatformVersion": "8.1.0",
   "exporter": {
@@ -266,21 +302,23 @@
     <bpmn:sequenceFlow id="Flow_0jjibtc" sourceRef="Activity_0dddm1q" targetRef="Activity_1coowbr" />
     <bpmn:sequenceFlow id="Flow_09mldsp" sourceRef="Gateway_1lx1k40" targetRef="Activity_1ygogmv" />
     <bpmn:sequenceFlow id="Flow_02f641s" name="nein" sourceRef="Gateway_0l9ayqk" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if applicationSsbApproved then false else true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_02vw2au" name="ja" sourceRef="Gateway_0l9ayqk" targetRef="Activity_0dddm1q" />
     <bpmn:sequenceFlow id="Flow_1go13ju" sourceRef="Activity_0nhv5ao" targetRef="Gateway_0l9ayqk" />
     <bpmn:sequenceFlow id="Flow_11ihzs2" sourceRef="Activity_0xyiw9p" targetRef="Activity_0nhv5ao" />
     <bpmn:sequenceFlow id="Flow_0jlwwdy" name="nein" sourceRef="Gateway_0q341lr" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if applicationPavApproved then false else true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1s67xs5" name="ja" sourceRef="Gateway_0q341lr" targetRef="Activity_0xyiw9p" />
     <bpmn:sequenceFlow id="Flow_03nx8mt" sourceRef="Activity_0zz6mbs" targetRef="Gateway_0q341lr" />
     <bpmn:sequenceFlow id="Flow_00j53eu" sourceRef="Activity_07l78pf" targetRef="Activity_0zz6mbs" />
     <bpmn:sequenceFlow id="Flow_0m0uf2u" name="abgelehnt" sourceRef="Gateway_1x3eqm6" targetRef="Gateway_1lx1k40">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if applicationProfessorApproved then false else true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_081vw00" name="angenommen" sourceRef="Gateway_1x3eqm6" targetRef="Activity_07l78pf" />
+    <bpmn:sequenceFlow id="Flow_081vw00" name="angenommen" sourceRef="Gateway_1x3eqm6" targetRef="Activity_07l78pf">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=applicationProfessorApproved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0fur0fc" sourceRef="Activity_036f6u0" targetRef="Gateway_1x3eqm6" />
     <bpmn:sequenceFlow id="Flow_0us4bnp" sourceRef="Activity_1ngqsjq" targetRef="Activity_10sc3z8" />
     <bpmn:sequenceFlow id="Flow_1hjqtow" sourceRef="Activity_1v46goz" targetRef="Activity_036f6u0" />
@@ -291,14 +329,14 @@
     <bpmn:sequenceFlow id="Flow_0egfivy" sourceRef="StartEvent_1" targetRef="Activity_1ngqsjq" />
     <bpmn:sendTask id="Activity_1ri70px" name="Beteiligte über Annahme informieren">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="annahme-senden" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1lcmo72</bpmn:incoming>
       <bpmn:outgoing>Flow_0rapvst</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:sendTask id="Activity_1ygogmv" name="Beteiligte über Ablehnung informieren">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="ablehnung-senden" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_09mldsp</bpmn:incoming>
       <bpmn:outgoing>Flow_06733al</bpmn:outgoing>
@@ -319,7 +357,7 @@
     <bpmn:serviceTask id="Activity_1coowbr" name="Arbeit anlegen">
       <bpmn:documentation>Enddatum anhand Startdatum berechnen</bpmn:documentation>
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="hello-world" />
+        <zeebe:taskDefinition type="abschlussarbeit-anlegen" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0jjibtc</bpmn:incoming>
       <bpmn:outgoing>Flow_1lcmo72</bpmn:outgoing>
@@ -377,8 +415,12 @@ Abfrage Startdatum, falls nicht Tag der Annahme</bpmn:documentation>
       <bpmn:incoming>Flow_081vw00</bpmn:incoming>
       <bpmn:outgoing>Flow_00j53eu</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_1x3eqm6" name="Entscheidung über Anfrage" default="Flow_081vw00">
-      <bpmn:extensionElements />
+    <bpmn:exclusiveGateway id="Gateway_1x3eqm6" name="Entscheidung über Anfrage">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property />
+        </zeebe:properties>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0fur0fc</bpmn:incoming>
       <bpmn:outgoing>Flow_081vw00</bpmn:outgoing>
       <bpmn:outgoing>Flow_0m0uf2u</bpmn:outgoing>

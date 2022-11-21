@@ -1,9 +1,12 @@
 package de.ostfalia.bips.ws22.camunda.database.service;
 
+import de.ostfalia.bips.ws22.camunda.database.domain.Antrag;
+import de.ostfalia.bips.ws22.camunda.database.domain.Professor;
 import de.ostfalia.bips.ws22.camunda.database.repository.AntragRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 @Service
 public class AntragService {
@@ -17,12 +20,28 @@ public class AntragService {
         return repository;
     }
 
+    public List<Antrag> getAntragByStudentAndProfessorId(Integer studentId, Integer professorId) {
+        if(studentId == null || professorId == null) {
+            throw new InvalidParameterException("Get Antrag failed. At least one parameter is NULL.");
+        }
+
+        return  repository.getAntragByStudentAndProfessorId(studentId, professorId);
+    }
+
     public int createAntrag(Integer studentID, Integer professorID, String titel, Integer typ) {
         if (studentID == null || professorID == null || titel == null || typ == null) {
             throw new InvalidParameterException("Create Antrag failed. At least one parameter is NULL.");
         }
 
         return repository.createAntrag(studentID, professorID, titel, typ);
+    }
+
+    public void updateAntragAblehnung(String grund, Integer studentID) {
+        if(grund == null) {
+            throw new InvalidParameterException("Update Antrag Genehmigung failed. At least one parameter is NULL.");
+        }
+
+        repository.updateAntragAblehnung(grund, studentID);
     }
 
     public void setAntragGenehmigungStatusProf(Boolean genehmigt, Integer studentID) {

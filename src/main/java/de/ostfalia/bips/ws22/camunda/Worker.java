@@ -1,11 +1,10 @@
 package de.ostfalia.bips.ws22.camunda;
 
+import de.ostfalia.bips.ws22.camunda.database.domain.Abschlussarbeit;
+import de.ostfalia.bips.ws22.camunda.database.domain.Antrag;
 import de.ostfalia.bips.ws22.camunda.database.domain.Professor;
 import de.ostfalia.bips.ws22.camunda.database.domain.Stichpunkt;
-import de.ostfalia.bips.ws22.camunda.database.service.AntragService;
-import de.ostfalia.bips.ws22.camunda.database.service.ProfessorService;
-import de.ostfalia.bips.ws22.camunda.database.service.StichpunktService;
-import de.ostfalia.bips.ws22.camunda.database.service.StudierenderService;
+import de.ostfalia.bips.ws22.camunda.database.service.*;
 import de.ostfalia.bips.ws22.camunda.model.Option;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -32,16 +31,18 @@ public class Worker {
     private final ProfessorService professorService;
     private final StudierenderService studierenderService;
     private final AntragService antragService;
+    private final AbschlussarbeitService abschlussarbeitService;
 
     public Worker(StichpunktService stichpunktService,
                   ProfessorService professorService,
                   StudierenderService studierenderService,
-                  AntragService antragService
-    ) {
+                  AntragService antragService,
+                  AbschlussarbeitService abschlussarbeitService) {
         this.stichpunktService = stichpunktService;
         this.professorService = professorService;
         this.studierenderService = studierenderService;
         this.antragService = antragService;
+        this.abschlussarbeitService = abschlussarbeitService;
     }
 
     @ZeebeWorker(type = "lade-stichpunkte", autoComplete = true)
@@ -144,6 +145,11 @@ public class Worker {
             LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
         }
 
+        if(!approved) {
+            String reasonDeny = job.getVariablesAsMap().get("reasonDeny").toString();
+            antragService.updateAntragAblehnung(reasonDeny, studentID);
+        }
+
     }
 
     @ZeebeWorker(type = "antrag-genehmigen-pav", autoComplete = true)
@@ -161,6 +167,11 @@ public class Worker {
             LOGGER.info("--> Genehmigungsstatus wurde gesetzt: " + approved);
         } catch (Exception e) {
             LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
+        }
+
+        if(!approved) {
+            String reasonDeny = job.getVariablesAsMap().get("reasonDeny").toString();
+            antragService.updateAntragAblehnung(reasonDeny, studentID);
         }
 
     }
@@ -181,6 +192,108 @@ public class Worker {
         } catch (Exception e) {
             LOGGER.info("--> Setzen des Genehmigungsstatus schlug fehl: " + e.getMessage());
         }
+
+        if(!approved) {
+            String reasonDeny = job.getVariablesAsMap().get("reasonDeny").toString();
+            antragService.updateAntragAblehnung(reasonDeny, studentID);
+        }
+
+    }
+
+    @ZeebeWorker(type = "abschlussarbeit-anlegen", autoComplete = true)
+    public void abschlussarbeitAnlegen(final ActivatedJob job) {
+
+        LOGGER.info("Neue Abschlussarbeit anlegen");
+
+        /** Antrag finden */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String selectedProfessorIDAndKeywordID = job.getVariablesAsMap().get("selectedProfessorIDAndKeywordID").toString();
+        String[] profAndKeywordString = selectedProfessorIDAndKeywordID.split(",");
+        Integer professorID = Integer.parseInt(profAndKeywordString[0]);
+
+        List<Antrag> applications = null;
+        try {
+            applications = antragService.getAntragByStudentAndProfessorId(studentID, professorID);
+            LOGGER.info("--> Antrag gefunden");
+        } catch (Exception e) {
+            LOGGER.info("--> Holen des Antrags schlug fehl: " + e.getMessage());
+        }
+
+        Integer applicationID = applications.get(0).getId();
+
+        /** Abschlussarbeit anlegen */
+        Integer thesisID = Integer.parseInt(job.getVariablesAsMap().get("thesisID").toString());
+        Integer applicationType = Integer.parseInt(job.getVariablesAsMap().get("applicationType").toString());
+        LocalDate thesisStartDate = LocalDate.parse(job.getVariablesAsMap().get("thesisStartDate").toString());
+        LocalDate thesisEndDate;
+
+        if (applicationType == 1) {
+            thesisEndDate = thesisStartDate.plusWeeks(11);
+        } else if (applicationType == 2) {
+            thesisEndDate = thesisStartDate.plusMonths(6);
+        } else {
+            thesisEndDate = null;
+        }
+
+        try {
+            abschlussarbeitService.createAbschlussarbeit(thesisID, thesisEndDate.toString(), thesisStartDate.toString(), applicationID);
+            LOGGER.info("--> Abschlussarbeit wurde angelegt");
+        } catch (Exception e) {
+            LOGGER.info("Anlage der Abschlussarbeit schlug fehl: " + e.getMessage());
+        }
+
+    }
+
+    @ZeebeWorker(type = "ablehnung-senden", autoComplete = true)
+    public void ablehnungSenden(final ActivatedJob job) {
+
+        /** Antrag finden */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String selectedProfessorIDAndKeywordID = job.getVariablesAsMap().get("selectedProfessorIDAndKeywordID").toString();
+        String[] profAndKeywordString = selectedProfessorIDAndKeywordID.split(",");
+        Integer professorID = Integer.parseInt(profAndKeywordString[0]);
+
+        List<Antrag> applications = null;
+        try {
+            applications = antragService.getAntragByStudentAndProfessorId(studentID, professorID);
+            LOGGER.info("--> Antrag gefunden");
+        } catch (Exception e) {
+            LOGGER.info("--> Holen des Antrags schlug fehl: " + e.getMessage());
+        }
+
+        LOGGER.info("Versende Absage (Grund: " + applications.get(0).getBegruendung_ablehnung() + ")");
+
+    }
+
+    @ZeebeWorker(type = "annahme-senden", autoComplete = true)
+    public void anahmeSenden(final ActivatedJob job) {
+
+        /** Antrag finden */
+        Integer studentID = Integer.parseInt(job.getVariablesAsMap().get("studentID").toString());
+        String selectedProfessorIDAndKeywordID = job.getVariablesAsMap().get("selectedProfessorIDAndKeywordID").toString();
+        String[] profAndKeywordString = selectedProfessorIDAndKeywordID.split(",");
+        Integer professorID = Integer.parseInt(profAndKeywordString[0]);
+
+        List<Antrag> applications = null;
+        try {
+            applications = antragService.getAntragByStudentAndProfessorId(studentID, professorID);
+            LOGGER.info("--> Antrag gefunden");
+        } catch (Exception e) {
+            LOGGER.info("--> Holen des Antrags schlug fehl: " + e.getMessage());
+        }
+
+        Integer applicationID = applications.get(0).getId();
+
+        /** Abschlussarbeit finden */
+        List<Abschlussarbeit> thesis = null;
+        try {
+            thesis = abschlussarbeitService.getAbschlussarbeitByAntragID(applicationID);
+            LOGGER.info("--> Abschlussarbeit gefunden");
+        } catch (Exception e) {
+            LOGGER.info("--> Holen der Abschlussarbeit schlug fehl: " + e.getMessage());
+        }
+
+        LOGGER.info("Versende Annahme (Beginn: " + thesis.get(0).getBeginn_datum() + ", Ende: " + thesis.get(0).getEnde_datum() + ")");
 
     }
 }

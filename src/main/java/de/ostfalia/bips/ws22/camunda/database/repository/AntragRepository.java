@@ -1,14 +1,12 @@
 package de.ostfalia.bips.ws22.camunda.database.repository;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.ostfalia.bips.ws22.camunda.database.domain.Antrag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.List;
 
 public interface AntragRepository extends JpaRepository<Antrag, Integer> {
     @Modifying
@@ -19,6 +17,22 @@ public interface AntragRepository extends JpaRepository<Antrag, Integer> {
         @Param("professorId") Integer idP,
         @Param("titel") String titel,
         @Param("typ") Integer typ
+    );
+
+    @Modifying
+    @Query(value = "UPDATE Antrag SET begruendung_ablehnung = :grund WHERE id_studierender = :studentID", nativeQuery = true)
+    @Transactional
+    void updateAntragAblehnung (
+            @Param("grund") String grund,
+            @Param("studentID") Integer studentID
+    );
+
+    @Modifying
+    @Query(value = "SELECT * FROM Antrag WHERE id_studierender = :studentId AND id_professor = :professorId", nativeQuery = true)
+    @Transactional
+    List<Antrag> getAntragByStudentAndProfessorId (
+            @Param("studentId") Integer idS,
+            @Param("professorId") Integer idP
     );
 
     @Modifying
